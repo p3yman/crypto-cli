@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs-extra');
 const program = require('commander');
-const { initFile } = require('./portfolio');
+const { initFile, coinHistory } = require('./portfolio');
 const { buy, sell } = require('./transactions');
 
 // Initiate portfolio file
@@ -25,6 +25,13 @@ program
     .description('Sell a coin')
     .action( () => {
         sell();
+    });
+
+program
+    .command('history')
+    .description('Show coin transaction history')
+    .action( () => {
+        coinHistory();
     });
 
 
