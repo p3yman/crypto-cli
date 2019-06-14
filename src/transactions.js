@@ -1,9 +1,12 @@
 /*-----------------------------------------------------------------
 - Actions of transactions
 -----------------------------------------------------------------*/
-const { prompt } = require('inquirer');
+const inquirer  = require('inquirer');
 const { save } = require('./portfolio');
 const { coins } = require('./options');
+
+// Register datetime to inquirer
+inquirer.registerPrompt('datetime', require('inquirer-datepicker-prompt'));
 
 /**
  * Return questions to create a transaction
@@ -26,6 +29,14 @@ const transactionQuestions = (type = 'buy') => {
             message: `How much do you want to ${type}?`,
             validate: value => (value > 0 ? true : 'Please enter a positive number.'),
         },
+        {
+            name   : 'date',
+            type   : 'datetime',
+            message: `When did you ${type} this coin?`,
+            validate: value => (value > 0 ? true : 'Please enter a positive number.'),
+            format: ['yyyy', '/', 'mm', '/', 'dd', ' ', 'hh', ':', 'MM', ' ', 'TT'],
+            initial: new Date(),
+        },
     ]
 };
 
@@ -34,7 +45,7 @@ const transactionQuestions = (type = 'buy') => {
  * Create a buy transaction
  */
 const buy = () => {
-    prompt(
+    inquirer.prompt(
         transactionQuestions()
     ).then( answers => {
         addTransaction(
@@ -54,9 +65,9 @@ const buy = () => {
  * @param amount
  * @param date
  */
-function addTransaction(coin, type = 'buy', amount = 0, date = null) {
+function addTransaction(coin, type = 'buy', amount = 0, date) {
     
-    const now = new Date().getTime();
+    const now = new Date(date).getTime();
     
     // Create transaction object to insert into portfolio
     const transaction = {
@@ -65,7 +76,11 @@ function addTransaction(coin, type = 'buy', amount = 0, date = null) {
         date: date || now,
     };
     
-    save(coin, transaction);
+    // Save transaction into portfolio
+    const result = save(coin, transaction);
+    if( result ){
+        console.log('Your transaction saved successfully!');
+    }
     
 }
 
