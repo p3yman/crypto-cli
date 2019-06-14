@@ -2,28 +2,41 @@
 - Actions of transactions
 -----------------------------------------------------------------*/
 const { prompt } = require('inquirer');
-const { portfolio } = require('./portfolio');
+const { save } = require('./portfolio');
 const { coins } = require('./options');
 
-const transactionQuestions = [
-    {
-        name   : 'coin',
-        type   : 'list',
-        message: 'What coin do you want to buy?',
-        default: 'btc',
-        choices: coins,
-        validate: value => (value.length ? true : 'Please select a coin.'),
-    },
-];
+/**
+ * Return questions to create a transaction
+ * @param type
+ * @returns {*[]}
+ */
+const transactionQuestions = (type = 'buy') => {
+    return [
+        {
+            name   : 'coin',
+            type   : 'list',
+            message: `What coin do you want to ${type}?`,
+            default: 'btc',
+            choices: coins,
+            validate: value => (value.length ? true : 'Please select a coin.'),
+        },
+        {
+            name   : 'amount',
+            type   : 'input',
+            message: `How much do you want to ${type}?`,
+            validate: value => (value > 0 ? true : 'Please enter a positive number.'),
+        },
+    ]
+};
+
 
 /**
  * Create a buy transaction
  */
 const buy = () => {
     prompt(
-        transactionQuestions
+        transactionQuestions()
     ).then( answers => {
-        console.log(answers);
         addTransaction(
             answers.coin,
             'buy',
@@ -43,14 +56,16 @@ const buy = () => {
  */
 function addTransaction(coin, type = 'buy', amount = 0, date = null) {
     
+    const now = new Date().getTime();
+    
+    // Create transaction object to insert into portfolio
     const transaction = {
         type,
         amount,
-        date: date || new Date(),
+        date: date || now,
     };
     
-    console.log(coin);
-    console.log(transaction);
+    save(coin, transaction);
     
 }
 
