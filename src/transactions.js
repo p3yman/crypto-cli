@@ -57,6 +57,24 @@ const buy = () => {
     });
 };
 
+
+/**
+ * Create a sell transaction
+ */
+const sell = () => {
+    inquirer.prompt(
+        transactionQuestions()
+    ).then( answers => {
+        addTransaction(
+            answers.coin,
+            'sell',
+            answers.amount,
+            answers.date
+        );
+    });
+};
+
+
 /**
  * Add a transaction to portfolio
  *
@@ -67,13 +85,13 @@ const buy = () => {
  */
 function addTransaction(coin, type = 'buy', amount = 0, date) {
     
-    const now = new Date(date).getTime();
+    const transaction_date = new Date(date).getTime();
     
     // Create transaction object to insert into portfolio
     const transaction = {
         type,
         amount,
-        date: date || now,
+        date: transaction_date,
     };
     
     // Save transaction into portfolio
@@ -86,4 +104,5 @@ function addTransaction(coin, type = 'buy', amount = 0, date) {
 
 module.exports = {
     buy,
+    sell,
 };

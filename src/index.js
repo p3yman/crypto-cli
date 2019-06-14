@@ -2,7 +2,7 @@
 const fs = require('fs-extra');
 const program = require('commander');
 const { initFile } = require('./portfolio');
-const { buy } = require('./transactions');
+const { buy, sell } = require('./transactions');
 
 // Initiate portfolio file
 initFile();
@@ -12,13 +12,21 @@ program
     .version('0.0.1')
     .description('Manage your crypto currency portfolio from terminal.');
 
-// Register init command
+// Register commands
 program
     .command('buy')
     .description('Buy a coin')
     .action( () => {
         buy();
     });
+
+program
+    .command('sell')
+    .description('Sell a coin')
+    .action( () => {
+        sell();
+    });
+
 
 
 // Parse arguments
