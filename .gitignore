@@ -74,4 +74,12 @@ typings/
 
 # FuseBox cache
 .fusebox/
+
+# Editor config
+.idea/
+
+# Package lock
 package-lock.json
+
+# Portfolio datas
+data/
