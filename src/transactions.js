@@ -5,7 +5,7 @@ const inquirer  = require('inquirer');
 const { save } = require('./portfolio');
 const { coins } = require('./options');
 
-// Register datetime to inquirer
+// Register created_attime to inquirer
 inquirer.registerPrompt('datetime', require('inquirer-datepicker-prompt'));
 
 /**
@@ -30,7 +30,7 @@ const transactionQuestions = (type = 'buy') => {
             validate: value => (value > 0 ? true : 'Please enter a positive number.'),
         },
         {
-            name   : 'date',
+            name   : 'created_at',
             type   : 'datetime',
             message: `When did you ${type} this coin?`,
             validate: value => (value > 0 ? true : 'Please enter a positive number.'),
@@ -52,7 +52,7 @@ const buy = () => {
             answers.coin,
             'buy',
             answers.amount,
-            answers.date
+            answers.created_at
         );
     });
 };
@@ -69,7 +69,7 @@ const sell = () => {
             answers.coin,
             'sell',
             answers.amount,
-            answers.date
+            answers.created_at
         );
     });
 };
@@ -81,17 +81,17 @@ const sell = () => {
  * @param coin
  * @param type
  * @param amount
- * @param date
+ * @param created_at
  */
-function addTransaction(coin, type = 'buy', amount = 0, date) {
+function addTransaction(coin, type = 'buy', amount = 0, created_at) {
     
-    const transaction_date = new Date(date).getTime();
+    const transaction_date = new Date(created_at).getTime();
     
     // Create transaction object to insert into portfolio
     const transaction = {
         type,
         amount,
-        date: transaction_date,
+        created_at: transaction_date,
     };
     
     // Save transaction into portfolio
